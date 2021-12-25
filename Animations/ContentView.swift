@@ -11,35 +11,24 @@ struct ContentView: View {
     @State private var animationsAmount = 1.0
     
     var body: some View {
-        Button("Tap here!") {
-            //increases button's animation by one everytime its tapped
-            //animationsAmount += 0.5
-        }
-        .padding(50)
-        .background(.mint)
-        .foregroundColor(.white)
-        .clipShape(Circle())
-        //        .scaleEffect(animationsAmount)
-        //        .blur(radius: (animationsAmount - 1) * 3)
+        print(animationsAmount)
         
-        //smooth transition
-        //.animation(.default, value: animationsAmount)
-        //.animation(.interpolatingSpring(stiffness: 80, damping: 1), value: animationsAmount)
-        //.animation(.easeInOut(duration: 2).delay(1), value: animationsAmount)
-        //.animation(.easeInOut(duration: 2).repeatCount(3, autoreverses: true), value: animationsAmount)
-        
-        .overlay(Circle()
-                    .stroke(.red)
-                    .scaleEffect(animationsAmount)
-                    .opacity(2 - animationsAmount)
-                    .animation(
-                        .easeInOut(duration: 1)
-                            .repeatForever(autoreverses: false),
-                        value: animationsAmount
-                    )
-        )
-        .onAppear {
-            animationsAmount = 2
+        return VStack {
+            Stepper("Scale amount: ", value: $animationsAmount.animation(
+                .easeInOut(duration: 1)
+                    .repeatCount(3, autoreverses: true)
+            ), in: 1...5)
+            
+            Spacer()
+            
+            Button("Tap here!") {
+                animationsAmount += 1
+            }
+            .padding(40)
+            .background(.red)
+            .foregroundColor(.white)
+            .clipShape(Circle())
+            .scaleEffect(animationsAmount)
         }
     }
 }
