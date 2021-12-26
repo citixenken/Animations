@@ -9,30 +9,48 @@ import SwiftUI
 
 struct ContentView: View {
     
-    //@State private var animationAmount = 0.0
+    let letters = Array("Hello, @citixenken")
     @State private var enabled = false
+    @State private var dragAmount = CGSize.zero
     
     var body: some View {
-        VStack{
-            Button("Tap here!") {
-//                withAnimation(.interpolatingSpring(stiffness: 50, damping: 1)) {
-//                    animationAmount += 360
-//                }
-                enabled.toggle()
+        
+        //        //Card gradient
+        //        LinearGradient(gradient: Gradient(colors: [.yellow, .red]), startPoint: .topLeading, endPoint: .bottomTrailing)
+        //        //.ignoresSafeArea()
+        //            .frame(width: 400, height: 300)
+        //            .clipShape(RoundedRectangle(cornerRadius: 20))
+        //            .offset(dragAmount)
+        //        //.animation(.spring(), value: dragAmount)
+        //
+        //        //Drag event
+        //            .gesture(DragGesture()
+        //                        .onChanged { dragAmount = $0.translation }
+        //                     //.onEnded { _ in dragAmount = .zero }
+        //                        .onEnded { _ in
+        //                            withAnimation(.spring()) {
+        //                                dragAmount = .zero
+        //                            }
+        //            }
+        //            )
+        
+        HStack(spacing: 0){
+            ForEach(0..<letters.count) { num in
+                Text(String(letters[num]))
+                    .padding(5)
+                    .font(.title)
+                    .background(enabled ? .blue : .red)
+                    .offset(dragAmount)
+                    .animation(.default.delay(Double(num) / 20), value: dragAmount)
             }
-            //.padding(40)
-            .frame(width: 200, height: 200)
-            .background(enabled ? .red : .blue)
-            .animation(nil, value: enabled)
-            .foregroundColor(.white)
-            //.clipShape(Circle())
-            
-            //.rotation3DEffect(.degrees(animationAmount), axis: (x: 0, y: 1, z: 0))
-            .clipShape(RoundedRectangle(cornerRadius: enabled ? 60: 0))
-            .animation(.interpolatingSpring(stiffness: 50, damping: 2), value: enabled)
-            //.clipShape(RoundedRectangle(cornerRadius: enabled ? 60: 0))
-            
-            
+            .gesture(
+                DragGesture()
+                    .onChanged { dragAmount = $0.translation }
+                    .onEnded { _ in
+                        dragAmount = .zero
+                        enabled.toggle()
+                    }
+            )
         }
     }
 }
