@@ -55,24 +55,64 @@ struct ContentView: View {
 //            )
 //        }
         
-        VStack {
-            Button("Tap here!") {
-                withAnimation (.spring()){
-                    isShowingRed.toggle()
-                }
-            }
+//        VStack {
+//            Button("Tap here!") {
+//                withAnimation (.spring()){
+//                    isShowingRed.toggle()
+//                }
+//            }
+//
+//            if isShowingRed {
+//                Rectangle()
+//                    .fill(.green)
+//                    .frame(width: 200, height: 200)
+//                    //.transition(.scale)
+//                    //.transition(.asymmetric(insertion: .scale, removal: .opacity))
+//                    .transition(.pivot)
+//            }
+//        }
+        
+        ZStack {
+            Rectangle()
+                .fill(.mint)
+                .frame(width: 200, height: 200)
             
             if isShowingRed {
                 Rectangle()
-                    .fill(.green)
+                    .fill(.red)
                     .frame(width: 200, height: 200)
-                    //.transition(.scale)
-                    .transition(.asymmetric(insertion: .scale, removal: .opacity))
+                    .transition(.pivot)
+            }
+            
+        }
+        .onTapGesture {
+            withAnimation {
+                isShowingRed.toggle()
             }
         }
     }
 }
 
+struct CornerRotateModifier: ViewModifier {
+    let amount: Double
+    let anchor: UnitPoint
+    
+    func body(content: Content) -> some View {
+        content
+            .rotationEffect(.degrees(amount), anchor: anchor)
+        
+            //when the view rotates, parts lying outside natural rectangle don't get drawn
+            .clipped()
+    }
+}
+
+extension AnyTransition {
+    static var pivot: AnyTransition {
+        .modifier(active: CornerRotateModifier(amount: 0, anchor: .topLeading),
+                  identity: CornerRotateModifier(amount: -90, anchor: .topLeading)
+        )
+    }
+}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
